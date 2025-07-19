@@ -1,0 +1,1507 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Y si me preguntan por ti?</title>
+<style>
+  /* --- Diseño moderno vibrante (rosas + amarillo neón) --- */
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: #ffe8f0;
+    color: #4b0033;
+    margin: 0;
+    padding: 0.5rem 1rem 3rem 1rem;
+  }
+  header {
+    background: linear-gradient(90deg, #ff3ca6, #ffdb57);
+    color: #3a0023;
+    font-weight: 900;
+    font-size: 2rem;
+    text-shadow: 1px 1px 2px #fff5cc;
+    padding: 1rem 0;
+    text-align: center;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+  }
+  main {
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  section {
+    background: #fff0f5;
+    border-radius: 15px;
+    margin-bottom: 1.2rem;
+    padding: 1rem 1.2rem;
+    box-shadow: 0 5px 15px rgba(255, 59, 166, 0.25);
+  }
+  h2 {
+    margin-top: 0;
+    font-weight: 800;
+    font-size: 1.5rem;
+    border-bottom: 3px solid #ff3ca6;
+    padding-bottom: 0.3rem;
+  }
+  button {
+    background: #ff3ca6;
+    color: #fff;
+    font-weight: 700;
+    border: none;
+    padding: 0.9rem 2rem;
+    margin: 0.4rem 0.3rem 0.4rem 0;
+    border-radius: 35px;
+    box-shadow: 0 6px 10px #ff49b0cc;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.3s ease;
+  }
+  button:hover {
+    background: #ff005e;
+    transform: translateY(-4px);
+  }
+  .btn-small {
+    padding: 0.5rem 1.2rem;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+  #diario, #cartasAnonimas, #encuesta, #chat-mensajes {
+    max-height: 220px;
+    overflow-y: auto;
+  }
+  textarea {
+    width: 100%;
+    min-height: 60px;
+    padding: 0.6rem;
+    border-radius: 10px;
+    border: 1px solid #ff3ca6;
+    resize: vertical;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    color: #4b0033;
+  }
+  input[type="text"] {
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 10px;
+    border: 1px solid #ff3ca6;
+    font-size: 1rem;
+    color: #4b0033;
+    margin-bottom: 0.6rem;
+    box-sizing: border-box;
+  }
+  label {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 0.2rem;
+  }
+  /* Comentarios (cartas anónimas) */
+  .comentario {
+    background: #ffd5eb;
+    border-left: 6px solid #ff3ca6;
+    padding: 0.8rem 1rem;
+    color: #5a004d;
+    font-weight: 600;
+    margin-bottom: 0.6rem;
+    position: relative;
+    border-radius: 8px;
+    word-break: break-word;
+  }
+  .borrarBtn {
+    background: #ff005e;
+    font-weight: 700;
+    font-size: 18px;
+    border-radius: 50%;
+    border: none;
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 26px;
+    height: 26px;
+    line-height: 20px;
+    cursor: pointer;
+    color: white;
+    text-align: center;
+  }
+  /* Estilos para las respuestas */
+  .respuestas-container {
+    margin-top: 0.5rem;
+    padding-left: 1rem;
+    border-left: 3px solid #ffdb57;
+  }
+  .respuesta {
+    background: #fff8e1;
+    padding: 0.5rem 0.8rem;
+    margin-bottom: 0.4rem;
+    border-radius: 6px;
+    font-size: 0.9em;
+    color: #7a5000;
+    word-break: break-word;
+    position: relative;
+  }
+  .respuesta .borrarBtn {
+    top: 4px;
+    right: 4px;
+    width: 20px;
+    height: 20px;
+    font-size: 14px;
+    line-height: 14px;
+  }
+  .reply-input-container {
+    margin-top: 0.5rem;
+    display: flex;
+    gap: 0.5rem;
+  }
+  .reply-input-container textarea {
+    flex-grow: 1;
+    min-height: 30px;
+    height: 30px;
+    padding: 0.4rem;
+    font-size: 0.9rem;
+    border-radius: 8px;
+  }
+  .reply-input-container button {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    border-radius: 20px;
+    margin: 0;
+    box-shadow: none;
+  }
+
+  /* Diario personal */
+  #diario {
+    background: #ffd5ebcc;
+    border-radius: 15px;
+    padding: 0.8rem;
+    margin-bottom: 1.2rem;
+    font-style: italic;
+    color: #6a003f;
+  }
+  /* Encabezados dentro de secciones */
+  .subtitulo {
+    font-weight: 700;
+    margin-top: 0.8rem;
+    margin-bottom: 0.3rem;
+    font-size: 1.1rem;
+    color: #9e1c40;
+  }
+  /* Contenedor para botones ramificaciones historia */
+  #historiaBotones {
+    margin-top: 1rem;
+  }
+  /* Scroll interno para secciones de info y encuesta */
+  #encuesta, #chat-mensajes {
+    background: #fff0f5cc;
+    padding: 0.8rem;
+    border-radius: 12px;
+    max-height: 220px;
+    overflow-y: auto;
+    box-shadow: inset 0 0 8px #ff3ca6aa;
+  }
+  /* Resultados contador corazones */
+  #resultadoEncuesta {
+    background: #ffdb57cc;
+    border-radius: 12px;
+    padding: 0.7rem;
+    margin-top: 0.7rem;
+    color: #3a0023;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  /* --- Estilos para el Chat --- */
+  #chat-mensajes {
+    background: #fdf6fb;
+    border-radius: 12px;
+    padding: 0.8rem;
+    margin-bottom: 1rem;
+    box-shadow: inset 0 0 8px #ff3ca6aa;
+    height: 200px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+  .chat-mensaje {
+    margin-bottom: 0.5rem;
+    padding: 0.6rem 0.9rem;
+    border-radius: 15px;
+    word-wrap: break-word;
+    max-width: 80%;
+  }
+  .chat-mensaje.user {
+    background: #ffdb57;
+    color: #3a0023;
+    align-self: flex-end;
+  }
+  .chat-mensaje.character {
+    background: #ff3ca6;
+    color: #fff;
+    align-self: flex-start;
+  }
+  .chat-mensaje .character-name {
+    font-weight: 700;
+    margin-bottom: 0.2rem;
+    display: block;
+    font-size: 0.9em;
+  }
+  .chat-input-container {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+  .chat-input-container input[type="text"] {
+    flex-grow: 1;
+    margin-bottom: 0;
+  }
+  .chat-input-container button {
+    padding: 0.6rem 1.5rem;
+    margin: 0;
+    border-radius: 25px;
+  }
+
+  /* --- Estilos para Personajes (Diseño de Tarjetas) --- */
+  #personajes-grid {
+      display: grid;
+      gap: 1.2rem;
+      margin-top: 0.8rem;
+      grid-template-columns: 1fr;
+      max-height: 400px;
+      overflow-y: auto;
+      padding: 0.5rem;
+      box-shadow: inset 0 0 8px rgba(255, 59, 166, 0.67);
+      border-radius: 12px;
+      background: #fff0f5cc;
+  }
+
+  .personaje-card {
+      background: #ffd5eb;
+      border-radius: 15px;
+      padding: 1rem;
+      box-shadow: 0 4px 12px rgba(255, 59, 166, 0.15);
+      border: 1px solid #ff3ca6;
+      transition: transform 0.2s ease;
+  }
+
+  .personaje-card:hover {
+      transform: translateY(-3px);
+  }
+
+  .personaje-card h3 {
+      font-size: 1.3rem;
+      color: #9e1c40;
+      margin-top: 0;
+      margin-bottom: 0.5rem;
+      border-bottom: 2px solid #ffdb57;
+      padding-bottom: 0.3rem;
+  }
+
+  .personaje-card p {
+      font-size: 0.95rem;
+      line-height: 1.5;
+      color: #5a004d;
+      margin-bottom: 0.5rem;
+      white-space: pre-wrap;
+  }
+
+  .personaje-card strong {
+      color: #ff005e;
+  }
+
+  /* --- Estilos para el Calendario Visual --- */
+  #calendar-container {
+    padding: 0.8rem;
+    background: #fff0f5cc; /* Fondo similar a otras secciones scrollables */
+    border-radius: 12px;
+    box-shadow: inset 0 0 8px #ff3ca6aa;
+    max-width: 400px; /* Ancho fijo para el calendario en móviles */
+    margin: 0 auto; /* Centrar en móviles */
+  }
+
+  .calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    color: #9e1c40;
+    font-size: 1.2rem;
+    font-weight: 700;
+  }
+
+  .calendar-header button {
+    background: #ff3ca6;
+    color: white;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin: 0; /* Remover margen extra */
+    box-shadow: none; /* Remover sombra extra */
+  }
+  .calendar-header button:hover {
+    background: #ff005e;
+    transform: none; /* No animar en botones de navegación */
+  }
+
+  .calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    font-weight: 700;
+    color: #5a004d;
+    margin-bottom: 0.5rem;
+  }
+
+  .calendar-day-name {
+    padding: 0.4rem 0;
+    font-size: 0.85rem;
+  }
+
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+  }
+
+  .calendar-day {
+    background: #ffd5eb; /* Fondo de día normal */
+    border-radius: 8px;
+    padding: 0.6rem 0.2rem;
+    text-align: center;
+    font-weight: 600;
+    color: #4b0033;
+    min-height: 40px; /* Asegurar un tamaño mínimo para el día */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+
+  .calendar-day:hover:not(.empty):not(.memory-date) {
+    background: #ffdb5780; /* Amarillo claro al pasar sobre días normales */
+  }
+
+  .calendar-day.empty {
+    background: #f0e0e5; /* Color para días vacíos */
+    cursor: default;
+    box-shadow: none;
+  }
+
+  .calendar-day.current-day {
+    background: #ffdb57; /* Día actual */
+    color: #3a0023;
+    font-weight: 800;
+    border: 2px solid #ff3ca6;
+  }
+
+  .calendar-day.memory-date {
+    background: #ff3ca6; /* Color para fechas con recuerdo */
+    color: white;
+    font-weight: 800;
+    border: 2px solid #a60057;
+    box-shadow: 0 2px 8px rgba(255, 59, 166, 0.4);
+    position: relative;
+    overflow: hidden; /* Para el efecto de la etiqueta */
+  }
+
+  .calendar-day.memory-date:hover {
+    background: #ff005e;
+    transform: translateY(-2px);
+  }
+
+  #memory-display {
+    background: #ffd5eb;
+    border-left: 6px solid #ff3ca6;
+    padding: 1rem;
+    margin-top: 1.5rem;
+    border-radius: 10px;
+    color: #5a004d;
+    font-weight: 600;
+    min-height: 60px; /* Para que no se mueva el layout */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(255, 59, 166, 0.15);
+  }
+
+  /* Controles de Audio */
+  #audio-controls {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding: 0.8rem;
+    background: #ffdb57cc;
+    border-radius: 12px;
+    color: #3a0023;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  #audio-controls button {
+    background: #3a0023;
+    color: #fff;
+    padding: 0.6rem 1.2rem;
+    border-radius: 25px;
+    margin: 0 0.5rem;
+    box-shadow: none;
+  }
+  #audio-controls button:hover {
+    background: #5a004d;
+  }
+
+  /* --- Notificaciones Misteriosas (NUEVO ESTILO) --- */
+  .notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #3a0023; /* Fondo oscuro */
+    color: #ffdb57; /* Texto amarillo neón */
+    padding: 15px 25px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: fadeInSlideDown 0.5s forwards, fadeOut 0.5s 5s forwards; /* 5s visible */
+    max-width: 300px;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    border: 2px solid #ff3ca6; /* Borde rosa vibrante */
+    text-align: center;
+  }
+
+  @keyframes fadeInSlideDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; display: none; }
+  }
+
+  /* --- Responsividad Avanzada --- */
+  @media (min-width: 600px) {
+    main {
+      max-width: 700px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+    header {
+      font-size: 2.5rem;
+    }
+    section {
+      margin-bottom: 0;
+    }
+    #historia {
+      grid-column: 1 / 3;
+    }
+    #diario, #cartasAnonimas, #encuesta, #chat {
+      max-height: 400px;
+    }
+    #chat-mensajes {
+        height: 300px;
+    }
+    #personajes {
+        grid-column: 1 / 3;
+        max-height: none;
+        overflow-y: visible;
+        padding: 1rem 1.2rem;
+        box-shadow: 0 5px 15px rgba(255, 59, 166, 0.25);
+        background: #fff0f5;
+    }
+    #personajes-grid {
+        grid-template-columns: 1fr 1fr;
+        max-height: 400px;
+    }
+    #calendario {
+        grid-column: 1 / 3;
+        max-height: none;
+        overflow-y: visible;
+        padding: 1rem 1.2rem;
+        box-shadow: 0 5px 15px rgba(255, 59, 166, 0.25);
+        background: #fff0f5;
+    }
+    #calendar-container {
+        max-width: 100%;
+    }
+  }
+
+  @media (min-width: 900px) {
+    main {
+      max-width: 1000px;
+      grid-template-columns: repeat(3, 1fr);
+    }
+    #historia {
+      grid-column: 1 / 4;
+    }
+    #diario { grid-column: 1 / 2; }
+    #cartasAnonimas { grid-column: 2 / 3; } /* Cartas en el centro */
+    #encuesta { grid-column: 3 / 4; } /* Encuesta a la derecha */
+    #chat { grid-column: 1 / 2; }
+    #personajes { grid-column: 2 / 3; }
+    #calendario { grid-column: 3 / 4; }
+
+    #personajes-grid {
+        grid-template-columns: 1fr;
+        max-height: 600px;
+    }
+  }
+
+  /* Ajustes para pantallas muy pequeñas (móviles) */
+  @media (max-width: 599px) {
+    body {
+      padding: 0.5rem;
+    }
+    header {
+      font-size: 1.8rem;
+      padding: 0.8rem 0;
+    }
+    button {
+      padding: 0.7rem 1.5rem;
+      font-size: 0.9rem;
+    }
+    .btn-small {
+      padding: 0.4rem 1rem;
+      font-size: 0.8rem;
+    }
+    main {
+      padding: 0;
+    }
+    section {
+      padding: 0.8rem;
+      margin-bottom: 1rem;
+    }
+    h2 {
+      font-size: 1.3rem;
+    }
+    #calendar-container {
+        padding: 0.5rem;
+    }
+    .calendar-day {
+        padding: 0.4rem 0.1rem;
+        min-height: 35px;
+    }
+    .calendar-day-name {
+        font-size: 0.8rem;
+    }
+    .notification {
+      max-width: calc(100% - 40px); /* Ajuste para móviles */
+      left: 20px; /* Centrar un poco más en móviles */
+      right: 20px;
+      font-size: 0.85rem;
+    }
+  }
+
+</style>
+</head>
+<body>
+
+<header>Y si me preguntan por ti?</header>
+<main>
+
+<section id="historia">
+  <h2>Historia</h2>
+  <div id="historiaTexto">Es la mañana después del receso de vacaciones de invierno, nuestros cuatro protagonistas deben volver al colegio, ¿llegarán temprano?</div>
+  <div id="historiaBotones">
+    <button data-accion="si">Sí</button>
+    <button data-accion="no">No</button>
+    <button data-accion="soloDos">Sólo dos de ellos</button>
+  </div>
+</section>
+
+<section>
+  <h2>Diario Personal</h2>
+  <textarea id="diarioInput" placeholder="Escribe aquí tus pensamientos..."></textarea>
+  <div id="diario"></div>
+</section>
+
+<section>
+  <h2>Cartas Anónimas</h2>
+  <textarea id="mensajeAnonimo" placeholder="Escribe tu carta anónima..."></textarea>
+  <button id="enviarMensaje">Enviar carta</button>
+  <div id="cartasAnonimas"></div>
+</section>
+
+<section>
+  <h2>Encuesta</h2>
+  <div id="encuesta"></div>
+</section>
+
+<section id="personajes">
+  <h2>Información de los Personajes</h2>
+  <div id="personajes-grid">
+    
+</div>
+</section>
+
+<section id="chat">
+  <h2>Chat con Personajes</h2>
+  <div id="chat-mensajes">
+    <div class="chat-mensaje character">
+      <span class="character-name">Sistema</span>
+      ¡Hola! ¿Con quién quieres hablar? Escribe el nombre del personaje.
+    </div>
+  </div>
+  <div class="chat-input-container">
+    <input type="text" id="chatInput" placeholder="Escribe tu mensaje aquí..." />
+    <button id="enviarChat">Enviar</button>
+  </div>
+</section>
+
+<section id="calendario">
+  <h2>Calendario con Recuerdos</h2>
+  <div id="calendar-container">
+    <div class="calendar-header">
+      <button id="prevMonth">Anterior</button>
+      <span id="currentMonthYear"></span>
+      <button id="nextMonth">Siguiente</button>
+    </div>
+    <div class="calendar-weekdays">
+      <div class="calendar-day-name">Lun</div>
+      <div class="calendar-day-name">Mar</div>
+      <div class="calendar-day-name">Mié</div>
+      <div class="calendar-day-name">Jue</div>
+      <div class="calendar-day-name">Vie</div>
+      <div class="calendar-day-name">Sáb</div>
+      <div class="calendar-day-name">Dom</div>
+    </div>
+    <div class="calendar-grid" id="calendar-grid">
+      
+</div>
+    <div id="memory-display">
+      <p>Haz clic en una fecha resaltada para ver el recuerdo.</p>
+    </div>
+  </div>
+</section>
+
+<section id="audio-controls">
+    <h2>Música y Sonidos</h2>
+    <p>Controla la experiencia de audio.</p>
+    <button id="toggleMusic">Música: On</button>
+    <button id="toggleSfx">Sonidos: On</button>
+</section>
+
+
+</main>
+
+<script>
+  // --- Audio Setup (NUEVO) ---
+  const backgroundMusic = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'); // URL de ejemplo, reemplaza con tu música
+  backgroundMusic.loop = true;
+  backgroundMusic.volume = 0.3; // Volumen bajo para la música de fondo
+
+  const sfxClicks = [
+    new Audio('https://www.soundjay.com/buttons/button-1.mp3'), // Click suave 1
+    new Audio('https://www.soundjay.com/buttons/button-3.mp3'), // Click suave 2
+    new Audio('https://www.soundjay.com/buttons/button-4.mp3')  // Click suave 3
+  ];
+
+  sfxClicks.forEach(sfx => sfx.volume = 0.3); // Volumen bajo para todos los SFX
+
+  let musicOn = true;
+  let sfxOn = true;
+
+  document.getElementById('toggleMusic').addEventListener('click', () => {
+    if (musicOn) {
+      backgroundMusic.pause();
+      document.getElementById('toggleMusic').textContent = 'Música: Off';
+    } else {
+      backgroundMusic.play();
+      document.getElementById('toggleMusic').textContent = 'Música: On';
+    }
+    musicOn = !musicOn;
+  });
+
+  document.getElementById('toggleSfx').addEventListener('click', () => {
+    sfxOn = !sfxOn;
+    document.getElementById('toggleSfx').textContent = `Sonidos: ${sfxOn ? 'On' : 'Off'}`;
+  });
+
+  function playSfx() {
+    if (sfxOn) {
+      const randomSfx = sfxClicks[Math.floor(Math.random() * sfxClicks.length)];
+      randomSfx.currentTime = 0; // Reinicia el sonido si se reproduce rápido
+      randomSfx.play();
+    }
+  }
+
+  // Auto-play la música al interactuar (navegadores requieren interacción del usuario)
+  document.addEventListener('click', () => {
+    if (musicOn && backgroundMusic.paused) {
+      backgroundMusic.play().catch(e => console.log("Autoplay blocked:", e));
+    }
+  }, { once: true });
+
+
+  // Estado global historia
+  let estadoHistoria = "inicio";
+
+  // Referencias DOM
+  const historiaTexto = document.getElementById('historiaTexto');
+  const historiaBotones = document.getElementById('historiaBotones');
+  const diarioInput = document.getElementById('diarioInput');
+  const diarioDiv = document.getElementById('diario');
+  const mensajeAnonimo = document.getElementById('mensajeAnonimo');
+  const cartasAnonimasDiv = document.getElementById('cartasAnonimas');
+  const encuestaDiv = document.getElementById('encuesta');
+  const personajesGrid = document.getElementById('personajes-grid');
+
+  // Referencias DOM para el Chat
+  const chatMensajesDiv = document.getElementById('chat-mensajes');
+  const chatInput = document.getElementById('chatInput');
+  const enviarChatBtn = document.getElementById('enviarChat');
+
+  // Referencias DOM para el Calendario
+  const currentMonthYearSpan = document.getElementById('currentMonthYear');
+  const prevMonthBtn = document.getElementById('prevMonth');
+  const nextMonthBtn = document.getElementById('nextMonth');
+  const calendarGrid = document.getElementById('calendar-grid');
+  const memoryDisplay = document.getElementById('memory-display');
+
+  let currentMonth = new Date().getMonth(); // 0-11
+  let currentYear = new Date().getFullYear();
+  const today = new Date(); // Para resaltar el día actual
+
+  // --- Notificaciones Misteriosas (NUEVA FUNCIÓN) ---
+  const notificaciones = [
+    { id: 'rumor1', mensaje: '**Rumor de pasillo:** Parece que Noha y Jasmin tuvieron una discusión épica anoche.', activableEn: ['inicio', 'si1'], activada: false },
+    { id: 'pista1', mensaje: 'Una nota anónima: "El secreto de Primrose no es lo que crees. Busca en los viejos archivos."', activableEn: ['escucharEscondidas'], activada: false },
+    { id: 'pensamiento1', mensaje: '¿Por qué Heath siempre parece tan feliz? Esconde algo, estoy segura.', activableEn: ['observarOtros'], activada: false },
+    { id: 'pregunta1', mensaje: 'Un mensaje en tu móvil: "¿Estás bien? Te noto algo distante hoy." (¿Quién será?)', activableEn: ['escribirDiario'], activada: false },
+    { id: 'fechaEvento', mensaje: '**Recordatorio:** El festival de invierno se acerca. Muchos secretos salen a la luz en esos eventos...', activableEn: ['nohaPensando', 'dialogoHeathPrimrose'], activada: false }
+  ];
+
+  function showNotification(notificationId) {
+    const notification = notificaciones.find(n => n.id === notificationId && !n.activada);
+    if (notification) {
+      const notificationDiv = document.createElement('div');
+      notificationDiv.className = 'notification';
+      notificationDiv.innerHTML = notification.mensaje;
+      document.body.appendChild(notificationDiv);
+
+      // Marca como activada para que no se muestre de nuevo
+      notification.activada = true;
+
+      // Eliminar la notificación después de la animación de fadeOut
+      notificationDiv.addEventListener('animationend', (event) => {
+        if (event.animationName === 'fadeOut') {
+          notificationDiv.remove();
+        }
+      });
+    }
+  }
+
+  function checkAndShowNotifications(estadoActual) {
+    notificaciones.forEach(n => {
+      if (!n.activada && n.activableEn.includes(estadoActual)) {
+        showNotification(n.id);
+      }
+    });
+  }
+  // Fin de Notificaciones Misteriosas
+
+  // Función para actualizar botones de historia
+  function setHistoriaBotones(botones) {
+    historiaBotones.innerHTML = '';
+    botones.forEach(b => {
+      const btn = document.createElement('button');
+      btn.textContent = b.texto;
+      if(b.clase) btn.className = b.clase;
+      btn.onclick = () => {
+        playSfx(); // Sonido al clickear un botón de historia
+        b.accion();
+      };
+      historiaBotones.appendChild(btn);
+    });
+  }
+
+  // Función para volver al inicio
+  function volverAlInicio() {
+    estadoHistoria = "inicio";
+    historiaTexto.textContent = "Es la mañana después del receso de vacaciones de invierno, nuestros cuatro protagonistas deben volver al colegio, ¿llegarán temprano?";
+    setHistoriaBotones([
+      { texto: "Sí", accion: () => manejarRespuesta("si") },
+      { texto: "No", accion: () => manejarRespuesta("no") },
+      { texto: "Sólo dos de ellos", accion: () => manejarRespuesta("soloDos") },
+    ]);
+    checkAndShowNotifications('inicio'); // Puede mostrar notificaciones al reiniciar
+  }
+
+  // Manejo principal de la historia (AMPLIADO con Notificaciones)
+  function manejarRespuesta(respuesta) {
+    switch(estadoHistoria) {
+      case "inicio":
+        if(respuesta === "si") {
+          estadoHistoria = "si1";
+          historiaTexto.textContent = "Los cuatro llegaron temprano para sus clases, pero ups Noha y Jasmin se sentían incómodos de cruzarse, ¿por qué será?";
+          setHistoriaBotones([
+            { texto: "Averiguar siguiendo la historia", accion: () => {
+              estadoHistoria = "noviosSeparados";
+              historiaTexto.textContent = "Un silencio tenso llenaba el pasillo. La noche anterior, una conversación difícil había cambiado todo entre Noha y Jasmin. Aún no estaban listos para enfrentarse, el aire vibraba con palabras no dichas.";
+              setHistoriaBotones([
+                { texto: "Volver al inicio", accion: volverAlInicio }
+              ]);
+              checkAndShowNotifications('noviosSeparados');
+            }},
+            { texto: "Hacer que uno le hable al otro y averiguarlo", accion: () => {
+              estadoHistoria = "hablarOpciones";
+              historiaTexto.textContent = "¿Quién le habla a quién?";
+              setHistoriaBotones([
+                { texto: "Noha a Jasmin", accion: () => {
+                  estadoHistoria = "dialogoNohaJasmin";
+                  historiaTexto.innerHTML = `-Hola Jasmin-<br/>-Hola Noha, ¿qué tal?-<br/>-Bien, solo quería ver cómo estabas, después de lo de ayer…-<br/>-Estoy bien Noha, mejor hablamos más tarde, ¿sí? Adiós-<br/>-Adiós…-`;
+                  setHistoriaBotones([
+                    { texto: "Noha se queda pensando...", accion: () => {
+                      estadoHistoria = "nohaPensando";
+                      historiaTexto.textContent = "Noha se quedó en el pasillo, el eco de las últimas palabras de Jasmin resonando en su mente. ¿Qué significaba ese 'adiós'? ¿Era definitivo? Una punzada de incertidumbre le apretó el pecho.";
+                      setHistoriaBotones([
+                          { texto: "Observar a los demás", accion: () => {
+                              estadoHistoria = "observarOtros";
+                              historiaTexto.textContent = "Mientras Noha se hundía en sus pensamientos, su mirada se desvió hacia Heath y Primrose, que reían en voz baja al final del pasillo. Parecían inmersos en su propio mundo, compartiendo un secreto o una broma. La facilidad de su interacción contrastaba con la tensión que flotaba entre Noha y Jasmin.";
+                              setHistoriaBotones([
+                                  { texto: "Seguir a Heath y Primrose", accion: () => {
+                                      estadoHistoria = "seguirHeathPrimrose";
+                                      historiaTexto.textContent = "La curiosidad pudo más. Disimuladamente, Noha se acercó lo suficiente para intentar captar algo de su conversación. No querían ser descubiertos.";
+                                      setHistoriaBotones([
+                                          { texto: "Escuchar a escondidas lo que dicen", accion: () => {
+                                              estadoHistoria = "escucharEscondidas";
+                                              historiaTexto.textContent = "Aguzas el oído y captas fragmentos: '...la sorpresa...', '...no podemos decir nada...', '...el evento de la próxima semana...' La conversación se interrumpe abruptamente cuando Heath mira a su alrededor, como si sintiera una presencia. Te escondes rápidamente.";
+                                              setHistoriaBotones([
+                                                  { texto: "¿A quién le cuentas lo que escuchaste?", accion: () => {
+                                                      estadoHistoria = "contarSecreto";
+                                                      historiaTexto.textContent = "¿Compartes la intriga con alguien, o te la guardas?";
+                                                      setHistoriaBotones([
+                                                          { texto: "A Noha", accion: () => {
+                                                              estadoHistoria = "contarANoha";
+                                                              historiaTexto.textContent = "Le susurras a Noha lo que escuchaste. Él te mira con una ceja levantada. '¿Sorpresa? ¿Evento? Mmm, interesante. Quizás Primrose planea algo para el festival de talentos.' Su tono es indiferente, pero hay un brillo en sus ojos que indica que ha tomado nota.";
+                                                              setHistoriaBotones([{texto: "Volver al inicio", accion: volverAlInicio}]);
+                                                              checkAndShowNotifications('contarANoha');
+                                                          }},
+                                                          { texto: "A Jasmin", accion: () => {
+                                                              estadoHistoria = "contarAJasmin";
+                                                              historiaTexto.textContent = "Te acercas a Jasmin, que está distraída mirando su móvil. 'Jasmin, no vas a creer lo que escuché de Heath y Primrose.' Ella levanta la vista, una mezcla de curiosidad y fastidio en su rostro. '¿Y ahora qué chismorreo? No me digas que el rumor de la fiesta es cierto...'";
+                                                              setHistoriaBotones([{texto: "Volver al inicio", accion: volverAlInicio}]);
+                                                              checkAndShowNotifications('contarAJasmin');
+                                                          }},
+                                                          { texto: "Guardárselo", accion: () => {
+                                                              estadoHistoria = "guardarSecreto";
+                                                              historiaTexto.textContent = "Decides guardar el secreto. La información te quema por dentro, pero sientes que es mejor esperar a ver qué sucede. La intriga te impulsa a estar más atento a Heath y Primrose en los próximos días.";
+                                                              setHistoriaBotones([{texto: "Volver al inicio", accion: volverAlInicio}]);
+                                                              checkAndShowNotifications('guardarSecreto');
+                                                          }}
+                                                      ]);
+                                                  }},
+                                              ]);
+                                              checkAndShowNotifications('escucharEscondidas');
+                                          }},
+                                      ]);
+                                  }},
+                                  { texto: "Ignorarlos y concentrarse en sus propios problemas", accion: () => {
+                                      estadoHistoria = "ignorarOtros";
+                                      historiaTexto.textContent = "La risa de Heath y Primrose se desvanece mientras te sumerges en tus propios pensamientos. La sensación de aislamiento se hace más fuerte. ¿Cómo intentas lidiar con ella?";
+                                      setHistoriaBotones([
+                                          { texto: "Escribiendo en el diario", accion: () => {
+                                              estadoHistoria = "escribirDiario";
+                                              historiaTexto.textContent = "Buscas refugio en tu diario, volcando tus frustraciones y pensamientos más íntimos. Las palabras fluyen, un bálsamo para tu mente.";
+                                              setHistoriaBotones([
+                                                  { texto: "¿Qué emoción predomina en lo que escribes?", accion: () => {
+                                                      estadoHistoria = "emocionDiario";
+                                                      historiaTexto.textContent = "¿Tristeza, rabia o confusión?";
+                                                      setHistoriaBotones([
+                                                          { texto: "Tristeza", accion: () => {
+                                                              historiaTexto.textContent = "Escribes sobre la tristeza que te inunda, la soledad y la añoranza de lo que una vez fue. Las lágrimas empañan las páginas.";
+                                                              setHistoriaBotones([{texto: "Volver al inicio", accion: volverAlInicio}]);
+                                                          }},
+                                                          { texto: "Rabia/Celos", accion: () => {
+                                                              historiaTexto.textContent = "La rabia y los celos se apoderan de ti mientras escribes, cuestionando por qué las cosas cambiaron y por qué otros parecen tan felices.";
+                                                              setHistoriaBotones([{texto: "Volver al inicio", accion: volverAlInicio}]);
+                                                          }},
+                                                          { texto: "Confusión", accion: () => {
+                                                              historiaTexto.textContent = "Escribes sobre la confusión, incapaz de entender lo que pasó o lo que sucederá. Un torbellino de preguntas sin respuesta.";
+                                                              setHistoriaBotones([{texto: "Volver al inicio", accion: volverAlInicio}]);
+                                                          }}
+                                                      ]);
+                                                  }}
+                                              ]);
+                                              checkAndShowNotifications('escribirDiario');
+                                          }},
+                                          { texto: "Buscando a otro amigo", accion: () => {
+                                              estadoHistoria = "buscarOtroAmigo";
+                                              historiaTexto.textContent = "Decides que necesitas hablar con alguien. ¿Quién podría entenderte en este momento?";
+                                              setHistoriaBotones([
+                                                  { texto: "Noha", accion: () => {
+                                                      historiaTexto.textContent = "Buscas a Noha, quien te escucha atentamente, aunque su propia preocupación es evidente. Te da un consejo sincero, aunque algo melancólico.";
+                                                      setHistoriaBotones([{texto: "Volver al inicio", accion: volverAlInicio}]);
+                                                  }},
+                                                  { texto: "Jasmin", accion: () => {
+                                                      historiaTexto.textContent = "A pesar de la tensión, intentas acercarte a Jasmin. Ella se muestra reacia al principio, pero tu persistencia abre una pequeña grieta en su muro. La conversación es difícil pero necesaria.";
+                                                      setHistoriaBotones([{texto: "Volver al inicio", accion: volverAlInicio}]);
+                                                  }},
+                                                  { texto: "Un personaje secundario (ej. un compañero de clase)", accion: () => {
+                                                      historiaTexto.textContent = "Buscas a Alex, un compañero de clase. Él te ofrece una perspectiva fresca y distendida, ayudándote a ver las cosas desde otro ángulo. Su humor aligera el ambiente.";
+                                                      setHistoriaBotones([{texto: "Volver al inicio", accion: volverAlInicio}]);
+                                                  }}
+                                              ]);
+                                          }}
+                                      ]);
+                                      checkAndShowNotifications('ignorarOtros');
+                                  }}
+                              ]);
+                              checkAndShowNotifications('observarOtros');
+                          }},
+                          { texto: "Volver al inicio", accion: volverAlInicio }
+                      ]);
+                      checkAndShowNotifications('nohaPensando');
+                    }},
+                    { texto: "Volver al inicio", accion: volverAlInicio }
+                  ]);
+                }},
+                { texto: "Jasmin a Noha", accion: () => {
+                  estadoHistoria = "dialogoJasminNoha";
+                  historiaTexto.innerHTML = `-Hola Noha-<br/>-Hola Jasmin… ¿qué necesitas?-<br/>-Quería hablar sobre lo nuestro… Sé que no fue fácil para ninguno, pero no puedo seguir así. Necesitamos aclarar las cosas.-<br/>-Ya hablamos Jasmin, no hay nada que aclarar.-<br/>-Por favor… solo unos minutos. Dame una oportunidad.-`;
+                  setHistoriaBotones([
+                    { texto: "Noha acepta", accion: () => {
+                      estadoHistoria = "nohaAcepta";
+                      historiaTexto.textContent = "Noha suspira, la resistencia en su voz. 'Está bien, Jasmin. Pero que sea rápido. Tengo clase.' Su postura se relaja un poco, una pequeña señal de apertura. Se dirigen a un rincón más apartado del pasillo, las miradas curiosas del resto de los alumnos sobre ellos.";
+                      setHistoriaBotones([{texto: "Volver al inicio", accion: volverAlInicio}]);
+                      checkAndShowNotifications('nohaAcepta');
+                    }},
+                    { texto: "Noha se niega", accion: () => {
+                      estadoHistoria = "nohaNiega";
+                      historiaTexto.textContent = "Noha sacude la cabeza. 'No, Jasmin. No hay nada más que hablar. Ya lo dijiste todo ayer.' Se da la vuelta y se aleja, dejando a Jasmin con una expresión de dolor y frustración. El final de su relación parece más definitivo que nunca.";
+                      setHistoriaBotones([{texto: "Volver al inicio", accion: volverAlInicio}]);
+                      checkAndShowNotifications('nohaNiega');
+                    }}
+                  ]);
+                }},
+                { texto: "Volver al inicio", accion: volverAlInicio }
+              ]);
+            }}
+          ]);
+          checkAndShowNotifications('si1');
+        } else if (respuesta === "no") {
+          estadoHistoria = "no1";
+          historiaTexto.textContent = "Noha y Jasmin llegaron tarde. Los dos, por razones diferentes, se quedaron dormidos y entraron a clases casi a la segunda hora. El director los esperaba en su oficina.";
+          setHistoriaBotones([
+            { texto: "Ver lo que pasó con el director", accion: () => {
+              estadoHistoria = "director";
+              historiaTexto.textContent = "El director los miró fijamente por encima de sus gafas. '¿Pueden explicarme por qué llegan a esta hora? Esto no es un juego.' La tensión en la oficina era palpable. Noha murmuró una excusa, mientras Jasmin, con su habitual arrogancia, intentaba justificarse.";
+              setHistoriaBotones([
+                { texto: "Volver al inicio", accion: volverAlInicio }
+              ]);
+              checkAndShowNotifications('director');
+            }},
+          ]);
+          checkAndShowNotifications('no1');
+        } else if (respuesta === "soloDos") {
+          estadoHistoria = "soloDos1";
+          historiaTexto.textContent = "Solo Heath y Primrose llegaron temprano. Se encontraron en el pasillo, intercambiando miradas cómplices y risas discretas. Parecía que ellos tenían sus propios secretos, ajenos al drama de Noha y Jasmin.";
+          setHistoriaBotones([
+            { texto: "Observarlos más de cerca", accion: () => {
+              estadoHistoria = "observarHeathPrimrose";
+              historiaTexto.textContent = "Se les ve muy cercanos, casi inseparables. ¿Qué estarán tramando?";
+              setHistoriaBotones([
+                { texto: "Escuchar su conversación", accion: () => {
+                  estadoHistoria = "escucharConversacionHeathPrimrose";
+                  historiaTexto.textContent = "Aguzas el oído y escuchas a Heath decir: '...la sorpresa de la fiesta es lo mejor. Noha y Jasmin no se la esperan'. Primrose le da un codazo y susurra: '¡Cállate! Alguien podría escucharnos'.";
+                  setHistoriaBotones([
+                    { texto: "Volver al inicio", accion: volverAlInicio }
+                  ]);
+                  checkAndShowNotifications('escucharConversacionHeathPrimrose');
+                }},
+                { texto: "Ignorarlos e ir a clase", accion: () => {
+                  estadoHistoria = "ignorarHeathPrimrose";
+                  historiaTexto.textContent = "Decides que los secretos de otros no son tu problema y te diriges a tu aula, aunque la curiosidad te pica.";
+                  setHistoriaBotones([
+                    { texto: "Volver al inicio", accion: volverAlInicio }
+                  ]);
+                  checkAndShowNotifications('ignorarHeathPrimrose');
+                }},
+              ]);
+              checkAndShowNotifications('observarHeathPrimrose');
+            }},
+          ]);
+          checkAndShowNotifications('soloDos1');
+        }
+        break;
+      // ... otros casos de estados de historia ...
+      default:
+        // Por si acaso, si el estado no coincide, vuelve al inicio
+        volverAlInicio();
+        break;
+    }
+  }
+
+
+  // Event Listeners
+  historiaBotones.addEventListener('click', (event) => {
+    if (event.target.tagName === 'BUTTON') {
+      const accion = event.target.dataset.accion;
+      if (accion) {
+        manejarRespuesta(accion);
+      }
+    }
+  });
+
+  // Diario Personal
+  diarioInput.addEventListener('input', () => {
+    localStorage.setItem('diarioPersonal', diarioInput.value);
+    diarioDiv.textContent = diarioInput.value;
+  });
+  // Cargar diario al inicio
+  if (localStorage.getItem('diarioPersonal')) {
+    diarioInput.value = localStorage.getItem('diarioPersonal');
+    diarioDiv.textContent = localStorage.getItem('diarioPersonal');
+  }
+
+  // Cartas Anónimas
+  let cartas = JSON.parse(localStorage.getItem('cartasAnonimas')) || [];
+  let replies = JSON.parse(localStorage.getItem('cartasAnonimasReplies')) || {};
+
+  function renderCartas() {
+    cartasAnonimasDiv.innerHTML = '';
+    if (cartas.length === 0) {
+      cartasAnonimasDiv.innerHTML = '<p style="text-align: center; color: #888;">Nadie ha enviado una carta anónima todavía...</p>';
+      return;
+    }
+    cartas.forEach((carta, index) => {
+      const cartaDiv = document.createElement('div');
+      cartaDiv.className = 'comentario';
+      cartaDiv.innerHTML = `
+        <p>${carta}</p>
+        <button class="borrarBtn" data-index="${index}">x</button>
+        <button class="btn-small" data-action="reply" data-index="${index}">Responder</button>
+        <div class="respuestas-container" id="replies-${index}"></div>
+      `;
+      cartasAnonimasDiv.appendChild(cartaDiv);
+
+      const repliesContainer = cartaDiv.querySelector(`#replies-${index}`);
+      if (replies[index]) {
+        replies[index].forEach((reply, replyIndex) => {
+          const replyDiv = document.createElement('div');
+          replyDiv.className = 'respuesta';
+          replyDiv.innerHTML = `
+            ${reply}
+            <button class="borrarBtn" data-index="${index}" data-reply-index="${replyIndex}">x</button>
+          `;
+          repliesContainer.appendChild(replyDiv);
+        });
+      }
+    });
+  }
+
+  document.getElementById('enviarMensaje').addEventListener('click', () => {
+    const mensaje = mensajeAnonimo.value.trim();
+    if (mensaje) {
+      cartas.push(mensaje);
+      localStorage.setItem('cartasAnonimas', JSON.stringify(cartas));
+      mensajeAnonimo.value = '';
+      renderCartas();
+      playSfx(); // Sonido al enviar carta
+    }
+  });
+
+  cartasAnonimasDiv.addEventListener('click', (event) => {
+    if (event.target.classList.contains('borrarBtn')) {
+      playSfx(); // Sonido al borrar
+      const index = parseInt(event.target.dataset.index);
+      const replyIndex = event.target.dataset.replyIndex !== undefined ? parseInt(event.target.dataset.replyIndex) : null;
+
+      if (replyIndex !== null) {
+        // Borrar respuesta específica
+        if (replies[index]) {
+          replies[index].splice(replyIndex, 1);
+          if (replies[index].length === 0) {
+            delete replies[index]; // Elimina el array si queda vacío
+          }
+        }
+      } else {
+        // Borrar carta y todas sus respuestas
+        cartas.splice(index, 1);
+        delete replies[index]; // Elimina todas las respuestas asociadas a la carta
+        // Reindexar las respuestas si se borra una carta del medio
+        const newReplies = {};
+        cartas.forEach((_, newIdx) => {
+          if (replies[newIdx] !== undefined) {
+            newReplies[newIdx] = replies[newIdx];
+          } else if (replies[newIdx + 1] !== undefined) { // Intenta mover si se borró uno antes
+             newReplies[newIdx] = replies[newIdx + 1];
+             delete replies[newIdx + 1];
+          }
+        });
+        replies = newReplies;
+      }
+
+      localStorage.setItem('cartasAnonimas', JSON.stringify(cartas));
+      localStorage.setItem('cartasAnonimasReplies', JSON.stringify(replies));
+      renderCartas();
+    } else if (event.target.dataset.action === 'reply') {
+      playSfx(); // Sonido al clickear responder
+      const index = parseInt(event.target.dataset.index);
+      const repliesContainer = document.getElementById(`replies-${index}`);
+
+      if (!repliesContainer.querySelector('.reply-input-container')) { // Evitar múltiples inputs
+        const replyInputContainer = document.createElement('div');
+        replyInputContainer.className = 'reply-input-container';
+        replyInputContainer.innerHTML = `
+          <textarea placeholder="Escribe tu respuesta..."></textarea>
+          <button class="btn-small" data-action="submit-reply" data-index="${index}">Enviar</button>
+        `;
+        repliesContainer.appendChild(replyInputContainer);
+      }
+    } else if (event.target.dataset.action === 'submit-reply') {
+      playSfx(); // Sonido al enviar respuesta
+      const index = parseInt(event.target.dataset.index);
+      const textarea = event.target.previousElementSibling;
+      const replyText = textarea.value.trim();
+
+      if (replyText) {
+        if (!replies[index]) {
+          replies[index] = [];
+        }
+        replies[index].push(replyText);
+        localStorage.setItem('cartasAnonimasReplies', JSON.stringify(replies));
+        renderCartas();
+      }
+    }
+  });
+
+  renderCartas(); // Initial render
+
+  // Encuesta de Personalidad
+  const preguntasEncuesta = [
+    {
+      pregunta: "¿Qué cualidad valoras más en un amigo?",
+      opciones: [
+        { texto: "Lealtad", personaje: "Noha" },
+        { texto: "Sentido del humor", personaje: "Heath" },
+        { texto: "Inteligencia", personaje: "Primrose" },
+        { texto: "Honestidad", personaje: "Jasmin" }
+      ]
+    },
+    {
+      pregunta: "¿Cuál es tu lugar favorito para pasar el tiempo en la escuela?",
+      opciones: [
+        { texto: "Biblioteca", personaje: "Noha" },
+        { texto: "Cancha de deportes", personaje: "Jasmin" },
+        { texto: "Cafetería", personaje: "Heath" },
+        { texto: "Patio central (para dibujar o escribir)", personaje: "Primrose" }
+      ]
+    },
+    {
+      pregunta: "¿Qué actividad te describe mejor?",
+      opciones: [
+        { texto: "Componer o escuchar música.", personaje: "Noha" },
+        { texto: "Competir en algo y ganar.", personaje: "Jasmin" },
+        { texto: "Organizar eventos y hacer reír a la gente.", personaje: "Heath" },
+        { texto: "Crear arte o explorar misterios.", personaje: "Primrose" }
+      ]
+    }
+  ];
+
+  let respuestasEncuesta = JSON.parse(localStorage.getItem('respuestasEncuesta')) || {};
+  let resultadosPersonajes = { "Noha": 0, "Jasmin": 0, "Heath": 0, "Primrose": 0 };
+
+  function calcularResultadosEncuesta() {
+    resultadosPersonajes = { "Noha": 0, "Jasmin": 0, "Heath": 0, "Primrose": 0 };
+    for (const pIndex in respuestasEncuesta) {
+      const oIndex = respuestasEncuesta[pIndex];
+      const personajeAsociado = preguntasEncuesta[pIndex].opciones[oIndex].personaje;
+      if (personajeAsociado) {
+        resultadosPersonajes[personajeAsociado]++;
+      }
+    }
+  }
+
+  function renderEncuesta() {
+    encuestaDiv.innerHTML = '';
+    let encuestaCompleta = true;
+    preguntasEncuesta.forEach((p, pIndex) => {
+      if (respuestasEncuesta[pIndex] === undefined) {
+        encuestaCompleta = false;
+        const preguntaDiv = document.createElement('div');
+        preguntaDiv.classList.add('pregunta-encuesta');
+        preguntaDiv.innerHTML = `<p class="subtitulo">${p.pregunta}</p>`;
+        p.opciones.forEach((opcion, oIndex) => {
+          const btn = document.createElement('button');
+          btn.textContent = opcion.texto;
+          btn.className = 'btn-small';
+          btn.onclick = () => {
+            playSfx(); // Sonido al responder encuesta
+            respuestasEncuesta[pIndex] = oIndex;
+            localStorage.setItem('respuestasEncuesta', JSON.stringify(respuestasEncuesta));
+            calcularResultadosEncuesta();
+            renderEncuesta(); // Vuelve a renderizar para mostrar la siguiente pregunta
+          };
+          preguntaDiv.appendChild(btn);
+        });
+        encuestaDiv.appendChild(preguntaDiv);
+        return; // Detener después de renderizar la primera pregunta sin respuesta
+      }
+    });
+
+    if (encuestaCompleta) {
+      calcularResultadosEncuesta();
+      let personajeMasParecido = "Ninguno en particular";
+      let maxPuntos = 0;
+      for (const personaje in resultadosPersonajes) {
+        if (resultadosPersonajes[personaje] > maxPuntos) {
+          maxPuntos = resultadosPersonajes[personaje];
+          personajeMasParecido = personaje;
+        } else if (resultadosPersonajes[personaje] === maxPuntos && maxPuntos > 0) {
+          personajeMasParecido += ` y ${personaje}`; // En caso de empate
+        }
+      }
+
+      encuestaDiv.innerHTML = `<p style="text-align: center; color: #888;">¡Has completado la encuesta!</p>
+                               <div id="resultadoEncuesta">Te pareces más a: <strong>${personajeMasParecido}</strong></div>
+                               <button class="btn-small" onclick="resetEncuesta()">Reiniciar Encuesta</button>`;
+    }
+  }
+
+  function resetEncuesta() {
+    playSfx(); // Sonido al resetear encuesta
+    respuestasEncuesta = {};
+    localStorage.removeItem('respuestasEncuesta');
+    calcularResultadosEncuesta(); // Reiniciar los conteos también
+    renderEncuesta();
+  }
+
+  renderEncuesta(); // Initial render
+
+
+  // Personajes
+  const personajes = [
+      {
+          nombre: "Noha",
+          descripcion: "Introvertido y reflexivo, Noha es el tipo de persona que observa más de lo que habla. Recientemente, su relación con Jasmin ha pasado por un momento difícil, dejándolo con emociones encontradas y una barrera que parece difícil de romper. Es leal a sus amigos, pero a veces se encierra en sí mismo. Su pasión es la música y pasa horas componiendo melodías en secreto.",
+          estado: "Pensativo, con un aire de melancolía.",
+          secreto: "Escribe letras de canciones que son poemas sobre sus verdaderos sentimientos."
+      },
+      {
+          nombre: "Jasmin",
+          descripcion: "Extrovertida y con una personalidad chispeante, Jasmin es el centro de atención donde quiera que vaya. Después de la ruptura con Noha, intenta mantener una fachada de indiferencia, pero en el fondo, la situación le duele más de lo que admite. Es competitiva y ambiciosa, destacando en los deportes y en el club de debate. Valora la independencia por encima de todo.",
+          estado: "Orgullosa, aunque con destellos de vulnerabilidad.",
+          secreto: "Tiene miedo a la soledad y a no ser suficiente."
+      },
+      {
+          nombre: "Heath",
+          descripcion: "El alma de la fiesta, siempre con una sonrisa y una broma lista. Heath es el mejor amigo de Primrose, y su química es innegable. Es el mediador del grupo, siempre intentando aliviar tensiones. Su despreocupación esconde una gran responsabilidad y un plan secreto que comparte solo con Primrose, relacionado con un evento escolar importante.",
+          estado: "Alegre y enérgico, con un toque de misterio.",
+          secreto: "Está organizando una sorpresa masiva para el final del semestre que nadie espera."
+      },
+      {
+          nombre: "Primrose",
+          descripcion: "Creativa y soñadora, Primrose ve el mundo a través de un lente artístico. Es la mejor amiga de Heath y su confidente más cercana. Posee una intuición aguda y a menudo es la primera en notar cuando algo anda mal, aunque prefiere expresarse a través de su arte (pintura y diseño). Está involucrada en el secreto de Heath, y su creatividad es clave para que funcione.",
+          estado: "Observadora, con una chispa de picardía en los ojos.",
+          secreto: "Colecciona objetos antiguos y cree que están conectados con un misterio del colegio."
+      }
+  ];
+
+  function renderPersonajes() {
+      personajesGrid.innerHTML = '';
+      personajes.forEach(p => {
+          const card = document.createElement('div');
+          card.className = 'personaje-card';
+          card.innerHTML = `
+              <h3>${p.nombre}</h3>
+              <p>${p.descripcion}</p>
+              <p><strong>Estado Actual:</strong> ${p.estado}</p>
+              <p><strong>Secreto:</strong> *Haz clic aquí para más información*</p>
+          `;
+          card.querySelector('p:last-of-type').onclick = () => {
+              playSfx(); // Sonido al revelar secreto
+              card.querySelector('p:last-of-type').innerHTML = `<strong>Secreto:</strong> ${p.secreto}`;
+          };
+          personajesGrid.appendChild(card);
+      });
+  }
+
+  renderPersonajes(); // Initial render
+
+  // --- Chat con personajes ---
+  let chatHistory = JSON.parse(localStorage.getItem('chatHistory')) || [];
+
+  function renderChat() {
+      chatMensajesDiv.innerHTML = '';
+      chatHistory.forEach(msg => {
+          const msgDiv = document.createElement('div');
+          msgDiv.className = `chat-mensaje ${msg.sender === 'User' ? 'user' : 'character'}`;
+          if (msg.sender !== 'User') {
+              msgDiv.innerHTML = `<span class="character-name">${msg.sender}</span>${msg.text}`;
+          } else {
+              msgDiv.textContent = msg.text;
+          }
+          chatMensajesDiv.appendChild(msgDiv);
+      });
+      chatMensajesDiv.scrollTop = chatMensajesDiv.scrollHeight; // Scroll al final
+  }
+
+  function addChatMessage(sender, text) {
+      chatHistory.push({ sender, text });
+      localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+      renderChat();
+  }
+
+  enviarChatBtn.addEventListener('click', () => {
+      const message = chatInput.value.trim();
+      if (message) {
+          addChatMessage('User', message);
+          chatInput.value = '';
+          playSfx(); // Sonido al enviar chat
+
+          // Lógica de respuesta del personaje
+          setTimeout(() => {
+              handleCharacterResponse(message);
+          }, 800); // Pequeño retraso para simular "escritura"
+      }
+  });
+
+  chatInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+          enviarChatBtn.click();
+      }
+  });
+
+  function handleCharacterResponse(userMessage) {
+      const lowerCaseMessage = userMessage.toLowerCase();
+      let response = { sender: 'Sistema', text: 'No entiendo con quién quieres hablar. Escribe "Noha", "Jasmin", "Heath" o "Primrose" para iniciar una conversación con ellos.' };
+
+      if (lowerCaseMessage.includes("hola")) {
+          response.text = "¡Hola! ¿Cómo estás?";
+      } else if (lowerCaseMessage.includes("noha")) {
+          response = { sender: 'Noha', text: 'Hey... ¿necesitas algo? Estoy un poco distraído hoy.' };
+      } else if (lowerCaseMessage.includes("jasmin")) {
+          response = { sender: 'Jasmin', text: 'Hola, ¿qué pasa? Estoy ocupada, así que sé breve.' };
+      } else if (lowerCaseMessage.includes("heath")) {
+          response = { sender: 'Heath', text: '¡Qué onda! Siempre listo para el chisme o una buena broma. 😉' };
+      } else if (lowerCaseMessage.includes("primrose")) {
+          response = { sender: 'Primrose', text: 'Hola. ¿Hay algo interesante que contar? Estoy dibujando.' };
+      } else if (lowerCaseMessage.includes("quien eres") || lowerCaseMessage.includes("quién eres")) {
+        response = {sender: 'Sistema', text: 'Soy el sistema de chat. Puedes hablar con los personajes del juego si dices sus nombres.'}
+      }
+      addChatMessage(response.sender, response.text);
+  }
+
+  renderChat(); // Initial render del chat
+
+  // --- Calendario con recuerdos ---
+  const memories = {
+      // Formato: 'YYYY-MM-DD': 'Recuerdo'
+      '2025-01-02': '“La abuela de Noha nos enseñó a hacer mermelada. Heath se manchó todo y nos hizo reír.”',
+      '2025-01-09': '“Primrose dibujó corazones en la arena. Heath los miraba desde lejos con una sonrisa.”',
+      '2025-01-18': '“Jasmin se quedó leyendo en casa. Noha le llevó limonada y no quiso que nadie lo supiera.”',
+      '2025-02-03': '“Fuimos todos a andar en patines. Heath se cayó encima de Primrose y no paró de disculparse.”',
+      '2025-02-14': '“Jasmin me dio una tarjetita dibujada a mano. Dijo que era por el día del amor, aunque no le gustaba mucho San Valentín.”',
+      '2025-02-26': '“Noha trajo flores del jardín de su abuela y se las dejó en el banco a Jasmin. Sin firmar.”',
+      '2025-03-05': '“Primrose encontró a Heath dormido con los auriculares puestos. Le escribió una nota y se la dejó en la mano.”',
+      '2025-03-11': '“Jasmin y Noha compartieron una historieta durante toda la clase. Se reían bajito.”',
+      '2025-03-25': '“Fuimos al parque de diversiones. Primrose no dejaba de cantar en los juegos.”',
+      '2025-03-29': '“Heath ayudó a Primrose a pintar un mural. Terminaron llenos de colores y felices.”',
+      '2025-04-06': '“Noha me ayudó a plantar un girasol. Dijo que crecería alto como yo.”',
+      '2025-04-12': '“Jasmin escribió su nombre y el de Noha en su cuaderno. No lo mostró, pero yo lo vi.”',
+      '2025-04-20': '“Primrose y Heath se quedaron mirando una lluvia de estrellas en silencio. Casi no respiraban.”',
+      '2025-04-27': '“Leí una carta que decía: ‘Tus ojos me hacen pensar en canciones’, firmada con una P.”',
+      '2025-05-03': '“Jasmin me regaló un marcador con brillitos. Dijo que lo usó para escribirle algo lindo a Noha.”',
+      '2025-05-09': '“Heath me pidió ayuda para escribir una carta a alguien. No quiso decir quién, pero sonreía.”',
+      '2025-05-19': '“Heath me enseñó a andar en bici sin manos. Terminamos en el pasto muertos de risa.”',
+      '2025-05-22': '“Primrose le cantó a Heath en el patio de la escuela. Todos miraron, menos ellos.”',
+      '2025-05-28': '“Noha y Jasmin compartieron una sombrilla. Se les notaba la vergüenza.”',
+      '2025-06-04': '“Heath dejó su campera en el banco para que Primrose no se mojara en la lluvia.”',
+      '2025-06-10': '“Noha escribió: ‘Me gusta tu risa’. Jasmin lo leyó en voz baja y se sonrojó.”',
+      '2025-06-16': '“Primrose me pidió ayuda para elegir una canción romántica. Quería practicarla bien.”',
+      '2025-06-23': '“Jasmin le tocó la mano a Noha por accidente y se quedaron así, sin decir nada.”',
+      '2025-06-28': '“Jasmin lloró con una película y me apoyó la cabeza en el hombro. No dije nada, pero fue bonito.”',
+      '2025-06-30': '“Primrose me mostró su cuaderno secreto con letras de canciones. Me dejó leer una, solo una.”',
+      '2025-07-01': '“Hoy conocí a Primrose en la plaza, estaba alimentando a un perro callejero.”',
+      '2025-07-03': '“Noha casi se cae de la moto de Heath, pero se rieron tanto que terminaron abrazados en la vereda.”',
+      '2025-07-05': '“Jasmin y Noha estuvieron intercambiando stickers. Se guardaban los que tenían frases tiernas.”',
+      '2025-07-07': '“Jasmin trajo pastelitos a clase. Dijo que los cocinó con su hermanito y se veían hermosos.”',
+      '2025-07-10': '“Fuimos todos al río. Heath me pintó en su cuaderno mientras los demás jugaban.”',
+      '2025-07-13': '“Primrose me preguntó si creía en el amor a primera vista. Luego se quedó mirando a Heath.”',
+      '2025-07-15': '“Primrose le escribió una canción a Jasmin y la tocó con su guitarra en secreto.”',
+      '2025-07-18': '“Noha me regaló una hoja con mi nombre dibujado en letras de colores. Dijo que era solo para mí.”',
+      '2025-07-21': '“Heath le pidió a Primrose que lo acompañara a mirar motos. Ella aceptó sin pensarlo.”'
+  };
+
+
+  function renderCalendar() {
+      const firstDayOfMonth = new Date(currentYear, currentMonth, 1);
+      const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+      const firstDayOfWeek = firstDayOfMonth.getDay(); // 0 (Domingo) a 6 (Sábado)
+
+      // Ajustar para que el Lunes sea el primer día (1) y Domingo el último (0)
+      const startDay = (firstDayOfWeek === 0) ? 6 : firstDayOfWeek - 1;
+
+      currentMonthYearSpan.textContent = `${new Date(currentYear, currentMonth).toLocaleString('es-ES', { month: 'long', year: 'numeric' })}`;
+      calendarGrid.innerHTML = '';
+
+      // Días vacíos al inicio del mes
+      for (let i = 0; i < startDay; i++) {
+          const emptyDay = document.createElement('div');
+          emptyDay.classList.add('calendar-day', 'empty');
+          calendarGrid.appendChild(emptyDay);
+      }
+
+      // Días del mes
+      for (let day = 1; day <= daysInMonth; day++) {
+          const dayDiv = document.createElement('div');
+          dayDiv.classList.add('calendar-day');
+          dayDiv.textContent = day;
+
+          const dateString = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+          if (memories[dateString]) {
+              dayDiv.classList.add('memory-date');
+              dayDiv.dataset.memory = memories[dateString];
+          }
+
+          // Resaltar día actual
+          if (day === today.getDate() && currentMonth === today.getMonth() && currentYear === today.getFullYear()) {
+              dayDiv.classList.add('current-day');
+          }
+
+          dayDiv.addEventListener('click', () => {
+              playSfx(); // Sonido al clickear un día del calendario
+              if (dayDiv.classList.contains('memory-date')) {
+                  memoryDisplay.textContent = dayDiv.dataset.memory;
+              } else {
+                  memoryDisplay.textContent = `No hay un recuerdo registrado para el ${day}/${currentMonth + 1}/${currentYear}.`;
+              }
+          });
+          calendarGrid.appendChild(dayDiv);
+      }
+  }
+
+  prevMonthBtn.addEventListener('click', () => {
+      playSfx(); // Sonido al cambiar mes
+      currentMonth--;
+      if (currentMonth < 0) {
+          currentMonth = 11;
+          currentYear--;
+      }
+      renderCalendar();
+  });
+
+  nextMonthBtn.addEventListener('click', () => {
+      playSfx(); // Sonido al cambiar mes
+      currentMonth++;
+      if (currentMonth > 11) {
+          currentMonth = 0;
+          currentYear++;
+      }
+      renderCalendar();
+  });
+
+  renderCalendar(); // Initial render del calendario
+
+
+  // Iniciar la historia al cargar la página
+  volverAlInicio();
+  checkAndShowNotifications('inicio'); // Muestra notificaciones al cargar la página inicialmente
+
+</script>
+</body>
+</html>
